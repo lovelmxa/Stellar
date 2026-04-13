@@ -347,6 +347,42 @@ private fun StepActionContent(
             }
 
             stringResource(R.string.wireless_debugging_pairing) -> {
+                val isMiuiOrHyperOs = remember {
+                    android.os.SystemProperties.get("ro.miui.ui.version.name").isNotEmpty() ||
+                    android.os.SystemProperties.get("ro.mi.os.version.name").isNotEmpty()
+                }
+                if (isMiuiOrHyperOs) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Warning,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(
+                                    stringResource(R.string.miui_pairing_warning_title),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                Text(
+                                    stringResource(R.string.miui_pairing_warning_body),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
                 Button(
                     onClick = {
                         try {

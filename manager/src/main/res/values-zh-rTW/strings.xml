@@ -213,6 +213,8 @@
     <string name="notification_permission_granted">通知權限已授予</string>
     <string name="notification_permission_required">必須授予通知權限才能進行配對</string>
     <string name="pairing_instruction">在無線偵錯頁面點擊「使用配對碼配對裝置」，然後在通知中心輸入配對碼</string>
+    <string name="miui_pairing_warning_title">MIUI / HyperOS 使用者</string>
+    <string name="miui_pairing_warning_body">您可能需要在系統設定中從「通知管理」-「通知顯示設定」將通知樣式切換為「原生樣式」。\n\n否則，您可能無法在通知中輸入配對碼。</string>
     <string name="connection_success">連線成功</string>
     <string name="verification_passed">驗證通過</string>
     <string name="checking_ellipsis">正在檢查...</string>

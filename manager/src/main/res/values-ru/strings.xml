@@ -213,6 +213,8 @@
     <string name="notification_permission_granted">Разрешение на уведомления получено</string>
     <string name="notification_permission_required">Для сопряжения требуется разрешение на уведомления</string>
     <string name="pairing_instruction">Нажмите «Сопряжение устройства по коду» в настройках беспроводной отладки, затем введите код в уведомлении</string>
+    <string name="miui_pairing_warning_title">Пользователи MIUI / HyperOS</string>
+    <string name="miui_pairing_warning_body">Возможно, вам нужно перейти в Настройки системы → Управление уведомлениями → Настройки отображения уведомлений и переключить стиль уведомлений на «Стандартный стиль».\n\nИначе вы не сможете ввести код сопряжения в уведомлении.</string>
     <string name="connection_success">Подключено</string>
     <string name="verification_passed">Проверено</string>
     <string name="checking_ellipsis">Проверка…</string>

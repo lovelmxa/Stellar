@@ -215,6 +215,8 @@
     <string name="notification_permission_granted">Notification permission granted</string>
     <string name="notification_permission_required">Notification permission is required for pairing</string>
     <string name="pairing_instruction">Tap \"Pair device with pairing code\" in Wireless Debugging settings, then enter the code in the notification</string>
+    <string name="miui_pairing_warning_title">MIUI / HyperOS Users</string>
+    <string name="miui_pairing_warning_body">You may need to go to System Settings → Notification Management → Notification Display Settings and switch the notification style to \"Native Style\".\n\nOtherwise, you may not be able to enter the pairing code in the notification.</string>
     <string name="connection_success">Connected</string>
     <string name="verification_passed">Verified</string>
     <string name="checking_ellipsis">Checking…</string>

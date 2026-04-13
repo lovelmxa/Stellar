@@ -213,6 +213,8 @@
     <string name="notification_permission_granted">Permiso de notificaciones concedido</string>
     <string name="notification_permission_required">Se requiere permiso de notificaciones para el emparejamiento</string>
     <string name="pairing_instruction">Pulse «Emparejar dispositivo con código» en los ajustes de depuración inalámbrica y luego introduzca el código en la notificación</string>
+    <string name="miui_pairing_warning_title">Usuarios de MIUI / HyperOS</string>
+    <string name="miui_pairing_warning_body">Es posible que deba ir a Configuración del sistema → Gestión de notificaciones → Configuración de visualización de notificaciones y cambiar el estilo de notificación a «Estilo nativo».\n\nDe lo contrario, es posible que no pueda introducir el código de emparejamiento en la notificación.</string>
     <string name="connection_success">Conectado</string>
     <string name="verification_passed">Verificado</string>
     <string name="checking_ellipsis">Comprobando…</string>

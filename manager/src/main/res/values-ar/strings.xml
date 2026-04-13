@@ -213,6 +213,8 @@
     <string name="notification_permission_granted">تم منح إذن الإشعارات</string>
     <string name="notification_permission_required">يلزم إذن الإشعارات للاقتران</string>
     <string name="pairing_instruction">اضغط على «إقران الجهاز برمز الإقران» في إعدادات التصحيح اللاسلكي، ثم أدخل الرمز في الإشعار</string>
+    <string name="miui_pairing_warning_title">مستخدمو MIUI / HyperOS</string>
+    <string name="miui_pairing_warning_body">قد تحتاج إلى الانتقال إلى إعدادات النظام ← إدارة الإشعارات ← إعدادات عرض الإشعارات وتغيير نمط الإشعارات إلى «النمط الأصلي».\n\nوإلا، قد لا تتمكن من إدخال رمز الإقران في الإشعار.</string>
     <string name="connection_success">تم الاتصال</string>
     <string name="verification_passed">تم التحقق</string>
     <string name="checking_ellipsis">جارٍ التحقق…</string>

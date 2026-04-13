@@ -213,6 +213,8 @@
     <string name="notification_permission_granted">Permission de notification accordée</string>
     <string name="notification_permission_required">La permission de notification est requise pour l\'appairage</string>
     <string name="pairing_instruction">Appuyez sur « Appairer l\'appareil avec un code » dans les paramètres de débogage sans fil, puis entrez le code dans la notification</string>
+    <string name="miui_pairing_warning_title">Utilisateurs MIUI / HyperOS</string>
+    <string name="miui_pairing_warning_body">Vous devrez peut-être aller dans Paramètres système → Gestion des notifications → Paramètres d\'affichage des notifications et passer le style de notification en « Style natif ».\n\nSinon, vous ne pourrez peut-être pas saisir le code d\'appairage dans la notification.</string>
     <string name="connection_success">Connecté</string>
     <string name="verification_passed">Vérifié</string>
     <string name="checking_ellipsis">Vérification…</string>
