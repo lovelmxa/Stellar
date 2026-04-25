@@ -9,8 +9,6 @@ import com.google.gson.GsonBuilder
 import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.PackageManagerApis
 import rikka.hidden.compat.UserManagerApis
-import roro.stellar.StellarApiConstants.PERMISSIONS
-import roro.stellar.StellarApiConstants.PERMISSION_KEY
 import roro.stellar.server.StellarConfig.PackageEntry
 import roro.stellar.server.api.IContentProviderUtils
 import roro.stellar.server.ktx.workerHandler
@@ -70,36 +68,6 @@ class ConfigManager {
             }
         }
 
-        for (userId in UserManagerApis.getUserIdsNoThrow()) {
-            for (pi in PackageManagerApis.getInstalledPackagesNoThrow(
-                (PackageManager.GET_META_DATA or PackageManager.GET_PROVIDERS).toLong(),
-                userId
-            )) {
-                if (
-                    pi == null ||
-                    pi.applicationInfo == null ||
-                    (
-                        pi.applicationInfo!!.metaData
-                            ?.getString(PERMISSION_KEY, "")
-                            ?.split(",")
-                            ?.contains("stellar") != true &&
-                            !ProviderDiscovery.hasStellarProvider(pi)
-                    ) ||
-                    pi.packageName == ServerConstants.MANAGER_APPLICATION_ID
-                ) {
-                    continue
-                }
-
-                val uid = pi.applicationInfo!!.uid
-
-                val packages = ArrayList<String>()
-                packages.add(pi.packageName)
-
-                updateLocked(uid, packages)
-                changed = true
-            }
-        }
-
         for (entry in LinkedHashMap(config.packages)) {
             val permissions = LinkedHashSet<String>()
             val packages = PackageManagerApis.getPackagesForUidNoThrow(entry.key)
@@ -108,12 +76,6 @@ class ConfigManager {
                     packageName, PackageManager.GET_META_DATA.toLong(),
                     UserHandleCompat.getUserId(entry.key)
                 ) ?: continue
-                for (permission in (applicationInfo.metaData?.getString(PERMISSION_KEY, "")
-                    ?: "").split(",")) {
-                    if (PERMISSIONS.contains(permission)) {
-                        permissions.add(permission)
-                    }
-                }
                 val packageInfo = PackageManagerApis.getPackageInfoNoThrow(
                     packageName,
                     (PackageManager.GET_META_DATA or PackageManager.GET_PROVIDERS).toLong(),
@@ -207,26 +169,9 @@ class ConfigManager {
                 return
             }
 
-            val declaredPermissions = LinkedHashSet<String>()
-            val metaDataPermissions = applicationInfo.metaData?.getString(PERMISSION_KEY, "") ?: ""
-            for (permission in metaDataPermissions.split(",")) {
-                if (PERMISSIONS.contains(permission)) {
-                    declaredPermissions.add(permission)
-                }
-            }
-
-            LOGGER.i("应用 %s 声明的权限: %s", packageName, declaredPermissions.toString())
-
             val entry = PackageEntry()
             entry.packages.add(packageName)
-
-            for (permission in declaredPermissions) {
-                entry.permissions[permission] = FLAG_ASK
-            }
-
-            if (entry.permissions.isEmpty()) {
-                entry.permissions["stellar"] = FLAG_ASK
-            }
+            entry.permissions[ShizukuApiConstants.PERMISSION_NAME] = FLAG_ASK
 
             config.packages[uid] = entry
             scheduleWriteLocked()

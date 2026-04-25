@@ -112,7 +112,6 @@ class StellarService : IStellarService.Stub() {
             LOGGER.i("发送 Binder 到客户端...")
             mainHandler.post {
                 try {
-                    BinderDistributor.sendBinderToAllClients(this)
                     BinderDistributor.sendShizukuBinderToAllClients(shizukuServiceIntercept)
                     BinderDistributor.sendBinderToManager(this)
                     ManagerGrantHelper.grantWriteSecureSettings(managerAppId)

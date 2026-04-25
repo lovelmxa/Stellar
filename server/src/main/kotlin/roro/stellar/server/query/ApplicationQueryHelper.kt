@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import rikka.hidden.compat.PackageManagerApis
 import rikka.hidden.compat.UserManagerApis
 import rikka.parcelablelist.ParcelableListSlice
-import roro.stellar.StellarApiConstants
 import roro.stellar.server.ConfigManager
 import roro.stellar.server.ServerConstants.MANAGER_APPLICATION_ID
 import roro.stellar.server.shizuku.ShizukuApiConstants
@@ -32,31 +31,11 @@ object ApplicationQueryHelper {
                 if (pi.requestedPermissions?.contains(SHIZUKU_MANAGER_PERMISSION) == true) continue
                 val applicationInfo = pi.applicationInfo ?: continue
                 val uid = applicationInfo.uid
-                var flag = -1
-
-                configManager.find(uid)?.let {
-                    if (!it.packages.contains(pi.packageName)) return@let
-                    it.permissions["stellar"]?.let { configFlag ->
-                        flag = configFlag
-                    }
-                }
-
-                if (flag != -1) {
-                    list.add(pi)
-                } else if (applicationInfo.metaData != null) {
-                    val stellarPermission = applicationInfo.metaData.getString(
-                        StellarApiConstants.PERMISSION_KEY,
-                        ""
-                    )
-                    if (stellarPermission.split(",").contains("stellar")) {
-                        list.add(pi)
-                    } else if (
-                        applicationInfo.metaData.getBoolean(ShizukuApiConstants.META_DATA_KEY, false) ||
-                        ProviderDiscovery.hasShizukuProvider(pi)
-                    ) {
-                        list.add(pi)
-                    }
-                } else if (ProviderDiscovery.hasShizukuProvider(pi)) {
+                if (
+                    applicationInfo.metaData?.getBoolean(ShizukuApiConstants.META_DATA_KEY, false) == true ||
+                    ProviderDiscovery.hasShizukuProvider(pi) ||
+                    configManager.find(uid)?.permissions?.containsKey(ShizukuApiConstants.PERMISSION_NAME) == true
+                ) {
                     list.add(pi)
                 }
             }

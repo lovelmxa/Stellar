@@ -14,12 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import roro.stellar.Stellar
 import roro.stellar.manager.authorization.AuthorizationManager
-import roro.stellar.manager.authorization.AuthorizationManager.FLAG_DENIED
-import roro.stellar.manager.authorization.AuthorizationManager.FLAG_GRANTED
 import roro.stellar.manager.common.state.Resource
 
 enum class AppType {
-    STELLAR,
     SHIZUKU
 }
 
@@ -52,36 +49,27 @@ class AppsViewModel(context: Context) : ViewModel() {
     fun load(onlyCount: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val stellarList = mutableListOf<AppInfo>()
                 val shizukuList = mutableListOf<AppInfo>()
                 var count = 0
 
                 for (pi in AuthorizationManager.getPackages()) {
-                    val appType = AuthorizationManager.getAppType(pi)
+                    val appType = AppType.SHIZUKU
                     val appInfo = AppInfo(pi, appType)
 
-                    when (appType) {
-                        AppType.STELLAR -> stellarList.add(appInfo)
-                        AppType.SHIZUKU -> shizukuList.add(appInfo)
-                    }
+                    shizukuList.add(appInfo)
 
-                    if (Stellar.getFlagForUid(pi.applicationInfo!!.uid, "stellar") == AuthorizationManager.FLAG_GRANTED) {
+                    if (Stellar.getFlagForUid(pi.applicationInfo!!.uid, "shizuku") == AuthorizationManager.FLAG_GRANTED) {
                         count++
                     }
                 }
 
                 if (!onlyCount) {
-                    fun sortWeight(uid: Int, isShizuku: Boolean): Int {
-                        val raw = try { Stellar.getFlagForUid(uid, if (isShizuku) "shizuku" else "stellar") } catch (_: Exception) { 0 }
-                        return if (isShizuku) {
-                            when (raw) { 2 -> 0; 4 -> 2; else -> 1 }
-                        } else {
-                            when (raw) { FLAG_GRANTED -> 0; FLAG_DENIED -> 2; else -> 1 }
-                        }
+                    fun sortWeight(uid: Int): Int {
+                        val raw = try { Stellar.getFlagForUid(uid, "shizuku") } catch (_: Exception) { 0 }
+                        return when (raw) { 2 -> 0; 4 -> 2; else -> 1 }
                     }
-                    stellarList.sortBy { sortWeight(it.packageInfo.applicationInfo!!.uid, false) }
-                    shizukuList.sortBy { sortWeight(it.packageInfo.applicationInfo!!.uid, true) }
-                    _stellarApps.postValue(Resource.success(stellarList))
+                    shizukuList.sortBy { sortWeight(it.packageInfo.applicationInfo!!.uid) }
+                    _stellarApps.postValue(Resource.success(emptyList()))
                     _shizukuApps.postValue(Resource.success(shizukuList))
                 }
                 _grantedCount.postValue(Resource.success(count))

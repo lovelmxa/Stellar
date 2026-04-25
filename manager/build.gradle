@@ -129,8 +129,6 @@ dependencies {
     implementation managerLibs.bundles.kotlinxCoroutines
 
     implementation project(':server')
-    implementation project(':api')
-    implementation project(':provider')
 
     implementation libs.hidden.compat
     compileOnly libs.hidden.stub

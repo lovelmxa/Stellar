@@ -7,6 +7,7 @@ plugins {
 android {
     namespace 'com.stellar.server'
     buildFeatures {
+        aidl true
         buildConfig = false
     }
     kotlin {
@@ -20,9 +21,6 @@ dependencies {
 
     api serverLibs.parcelablelist
 
-    implementation project(':aidl')
-    implementation project(':shared')
-    compileOnly project(':provider')
     implementation project(':shizuku-aidl')
     implementation project(':shizuku-api')
 

@@ -11,7 +11,6 @@ import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.DeviceIdleControllerApis
 import rikka.hidden.compat.PackageManagerApis
 import rikka.hidden.compat.UserManagerApis
-import roro.stellar.StellarApiConstants
 import roro.stellar.server.ServerConstants.MANAGER_APPLICATION_ID
 import roro.stellar.server.api.IContentProviderUtils
 import roro.stellar.server.shizuku.ShizukuApiConstants
@@ -22,34 +21,6 @@ import roro.stellar.server.util.ProviderDiscovery
 object BinderDistributor {
     private val LOGGER = Logger("BinderDistributor")
     private const val SHIZUKU_MANAGER_PERMISSION = "moe.shizuku.manager.permission.MANAGER"
-
-    fun sendBinderToAllClients(binder: Binder?) {
-        for (userId in UserManagerApis.getUserIdsNoThrow()) {
-            sendBinderToClients(binder, userId)
-        }
-    }
-
-    fun sendBinderToClients(binder: Binder?, userId: Int) {
-        try {
-            for (pi in PackageManagerApis.getInstalledPackagesNoThrow(
-                (PackageManager.GET_META_DATA or PackageManager.GET_PROVIDERS).toLong(),
-                userId
-            )) {
-                if (pi == null || pi.applicationInfo == null) continue
-
-                val declaredStellar = pi.applicationInfo!!.metaData
-                    ?.getString(StellarApiConstants.PERMISSION_KEY, "")
-                    ?.split(",")
-                    ?.contains("stellar") == true
-
-                if (declaredStellar || ProviderDiscovery.hasStellarProvider(pi)) {
-                    sendBinderToUserApp(binder, pi.packageName, userId)
-                }
-            }
-        } catch (tr: Throwable) {
-            LOGGER.e("调用 getInstalledPackages 时发生异常", tr = tr)
-        }
-    }
 
     fun sendShizukuBinderToAllClients(shizukuIntercept: ShizukuServiceIntercept?) {
         for (userId in UserManagerApis.getUserIdsNoThrow()) {

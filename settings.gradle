@@ -39,16 +39,8 @@ dependencyResolutionManagement {
             from(files('server/server.versions.toml'))
         }
 
-        apiLibs {
-            from(files('api/api.versions.toml'))
-        }
-
         managerLibs {
             from(files('manager/manager.versions.toml'))
-        }
-
-        demoLibs {
-            from(files('api/demo/demo.versions.toml'))
         }
     }
 }
@@ -57,43 +49,9 @@ if (System.getenv("JITPACK") != "true") {
     include ':manager'
     include ':server'
 }
-def root = "api"
-
-def propFile = file('local.properties')
-def props = new Properties()
-
-if (propFile.canRead()) {
-    props.load(new FileInputStream(propFile))
-
-    if (props != null) {
-        if (props["api.useLocal"].equals("true")) {
-            root = props["api.dir"]
-        }
-    }
-}
-include ':aidl'
-project(':aidl').projectDir = file("$root${File.separator}aidl")
-
-include ':shared'
-project(':shared').projectDir = file("$root${File.separator}shared")
-
-include ':api'
-project(':api').projectDir = file("$root${File.separator}api")
-
-include ':provider'
-project(':provider').projectDir = file("$root${File.separator}provider")
-
-include ':hidden-api-stub'
-project(':hidden-api-stub').projectDir = file("$root${File.separator}hidden-api-stub")
-
-include ':userservice'
-project(':userservice').projectDir = file("$root${File.separator}userservice")
 
 include ':shizuku-aidl'
 project(':shizuku-aidl').projectDir = file('shizuku/aidl')
 
 include ':shizuku-api'
 project(':shizuku-api').projectDir = file('shizuku/api')
-
-include ':demo'
-project(':demo').projectDir = file("$root${File.separator}demo")

@@ -10,7 +10,6 @@ import rikka.hidden.compat.ActivityManagerApis
 import rikka.hidden.compat.PackageManagerApis
 import rikka.hidden.compat.adapter.ProcessObserverAdapter
 import rikka.hidden.compat.adapter.UidObserverAdapter
-import roro.stellar.StellarApiConstants.PERMISSION_KEY
 import roro.stellar.server.ServerConstants.MANAGER_APPLICATION_ID
 import roro.stellar.server.binder.BinderDistributor
 import roro.stellar.server.ktx.mainHandler
@@ -62,23 +61,9 @@ object BinderSender {
                     return
                 }
 
-                val hasStellarProvider = ProviderDiscovery.hasStellarProvider(pi)
                 val hasShizukuProvider = ProviderDiscovery.hasShizukuProvider(pi)
                 val metaData = pi.applicationInfo!!.metaData
                 if (metaData != null) {
-                    val permissions = metaData.getString(PERMISSION_KEY, "")
-                    val declaredPermissions = permissions.split(",").map { it.trim() }
-                    if (declaredPermissions.contains("stellar") || hasStellarProvider) {
-                        LOGGER.i(
-                            "sendBinder: 发送 Binder 到用户应用: %s",
-                            packageName
-                        )
-                        val sent = BinderDistributor.sendBinderToUserApp(stellarService, packageName, userId)
-                        if (sent) return
-                        LOGGER.w("sendBinder: 发送 Stellar Binder 失败，继续尝试同 UID 其他包")
-                        continue
-                    }
-
                     val shizukuSupport =
                         metaData.getBoolean(ShizukuApiConstants.META_DATA_KEY, false) ||
                                 metaData.getString(ShizukuApiConstants.META_DATA_KEY)
@@ -101,16 +86,8 @@ object BinderSender {
                         continue
                     }
 
-                    LOGGER.d("sendBinder: 包 %s 的 metaData 不包含 stellar 或 shizuku 权限", packageName)
+                    LOGGER.d("sendBinder: 包 %s 的 metaData 不包含 shizuku 权限", packageName)
                 } else {
-                    if (hasStellarProvider) {
-                        LOGGER.i("sendBinder: 发送 Binder 到用户应用: %s (通过 provider)", packageName)
-                        val sent = BinderDistributor.sendBinderToUserApp(stellarService, packageName, userId)
-                        if (sent) return
-                        LOGGER.w("sendBinder: 发送 Stellar Binder 失败，继续尝试同 UID 其他包")
-                        continue
-                    }
-
                     if (hasShizukuProvider) {
                         if (pi.requestedPermissions?.contains(SHIZUKU_MANAGER_PERMISSION) == true) {
                             LOGGER.i("sendBinder: 跳过 Shizuku 管理器: %s", packageName)
@@ -128,7 +105,7 @@ object BinderSender {
                         continue
                     }
 
-                    LOGGER.w("sendBinder: 包 %s 的 metaData 为 null 且未发现兼容 provider，跳过", packageName)
+                    LOGGER.w("sendBinder: 包 %s 的 metaData 为 null 且未发现 Shizuku provider，跳过", packageName)
                 }
             } catch (t: Throwable) {
                 LOGGER.e(t, "sendBinder: 处理包 %s 时异常，继续下一个包", packageName)
